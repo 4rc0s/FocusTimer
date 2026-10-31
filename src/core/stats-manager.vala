@@ -275,7 +275,18 @@ namespace Ft
                         "time",
                         time_value);
 
-                filter = new Gom.Filter.and (category_filter, time_filter);
+                // Match only entries without a source; otherwise this could pick up
+                // an entry imported by `SyncManager` that starts at the same time.
+                var no_source_value = GLib.Value (typeof (int64));
+                no_source_value.set_int64 (0);
+
+                var no_source_filter = new Gom.Filter.eq (
+                        typeof (Ft.StatsEntry),
+                        "source-id",
+                        no_source_value);
+
+                filter = new Gom.Filter.and (category_filter,
+                                             new Gom.Filter.and (time_filter, no_source_filter));
             }
 
             return yield repository.find_async (typeof (Ft.StatsEntry), filter);

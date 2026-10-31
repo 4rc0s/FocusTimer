@@ -938,6 +938,7 @@ namespace Ft
 
             this.is_running = false;
             this.update_status ();
+            this.synced ();
 
             foreach (unowned var callback in this.idle_callbacks) {
                 callback.func ();
@@ -1033,10 +1034,11 @@ namespace Ft
          * Lifecycle
          */
 
-        private void start (GLib.File folder)
+        private void start (GLib.File folder,
+                            string?   device_id = null)
         {
             try {
-                this.device_id = load_or_create_device_id ();
+                this.device_id = device_id ?? load_or_create_device_id ();
 
                 if (!folder.query_exists ()) {
                     folder.make_directory_with_parents ();
@@ -1088,7 +1090,22 @@ namespace Ft
             this.update_status ();
         }
 
-        private void stop ()
+        /**
+         * Start syncing with a given folder and device id, regardless of settings.
+         *
+         * Intended for tests, which run with an in-memory database and settings.
+         */
+        public void start_with_folder (GLib.File folder,
+                                       string    device_id)
+        {
+            this.stop ();
+            this.start (folder, device_id);
+        }
+
+        /**
+         * Stop syncing and forget in-memory state. Settings are left unchanged.
+         */
+        public void stop ()
         {
             if (this.export_timeout_id != 0) {
                 GLib.Source.remove (this.export_timeout_id);
@@ -1214,6 +1231,11 @@ namespace Ft
                     break;
             }
         }
+
+        /**
+         * Emitted after a sync pass completes, successful or not.
+         */
+        public signal void synced ();
 
         public override void dispose ()
         {

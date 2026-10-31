@@ -26,6 +26,7 @@ test_names = [
   'session',
   'session-manager',
   'stats-manager',
+  'sync-manager',
   'database',
   'notification-manager',
   'command',
