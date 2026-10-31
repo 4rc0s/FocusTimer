@@ -150,6 +150,18 @@
       <default>false</default>
       <summary>Automatically launch the app when you log in</summary>
     </key>
+
+    <!-- Sync -->
+    <key name="sync-enabled" type="b">
+      <default>false</default>
+      <summary>Sync stats through a shared folder</summary>
+      <description>Exchange stats with other devices through a folder kept in sync by a tool such as Syncthing.</description>
+    </key>
+    <key name="sync-folder" type="s">
+      <default>''</default>
+      <summary>Shared sync folder</summary>
+      <description>Absolute path of the folder used for syncing stats. Each device writes only to its own file in this folder.</description>
+    </key>
   </schema>
 
   <!-- Actions -->

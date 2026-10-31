@@ -179,6 +179,7 @@ namespace Ft
 
         private Ft.KeyboardManager?         keyboard_manager;
         private Ft.StatsManager?            stats_manager;
+        private Ft.SyncManager?             sync_manager;
         private Ft.EventProducer?           event_producer;
         private Ft.EventBus?                event_bus;
         private Ft.JobQueue?                job_queue;
@@ -819,6 +820,7 @@ namespace Ft
 
             this.setup_resources ();
             this.setup_database ();
+            this.sync_manager = new Ft.SyncManager ();
             this.setup_plugins ();
             this.setup_providers ();
             this.setup_actions ();
@@ -1140,6 +1142,17 @@ namespace Ft
 
             while (remaining > 0 && main_context.iteration (true));
 
+            // Export stats saved during shutdown to the sync folder
+            remaining = 1;
+
+            this.sync_manager.flush.begin (
+                (obj, res) => {
+                    this.sync_manager.flush.end (res);
+                    remaining--;
+                });
+
+            while (remaining > 0 && main_context.iteration (true));
+
             // Cleanup
             Ft.Database.close ();
             Ft.SessionManager.set_default (null);
@@ -1158,6 +1171,7 @@ namespace Ft
             this.notification_manager = null;
             this.screen_overlay_manager = null;
             this.keyboard_manager = null;
+            this.sync_manager = null;
             this.stats_manager = null;
             this.session_manager = null;
             this.timer = null;

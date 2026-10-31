@@ -46,6 +46,7 @@ libft_core_sources = files(
   'state.vala',
   'stats-entry.vala',
   'stats-manager.vala',
+  'sync-manager.vala',
   'time-block.vala',
   'time-block-entry.vala',
   'timer.vala',

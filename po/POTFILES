@@ -48,6 +48,7 @@ src/core/sounds.vala
 src/core/state.vala
 src/core/stats-entry.vala
 src/core/stats-manager.vala
+src/core/sync-manager.vala
 src/core/time-block-entry.vala
 src/core/time-block.vala
 src/core/timer-action-group.vala
